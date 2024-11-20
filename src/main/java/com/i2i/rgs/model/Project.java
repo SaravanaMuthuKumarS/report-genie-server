@@ -11,16 +11,16 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
 @Getter
 @Setter
 @Entity
 @Table(name = "projects")
-public class Project {
+public class Project extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id")
@@ -29,9 +29,9 @@ public class Project {
     @Column(name = "name", nullable = false, length = 35)
     private String name;
 
-    @Column(name = "clientName", nullable = false, unique = true, length = 20)
+    @Column(name = "client_name", nullable = false, unique = true, length = 20)
     private String clientName;
 
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private Set<Employee> employees;
+    private Set<User> employees;
 }
