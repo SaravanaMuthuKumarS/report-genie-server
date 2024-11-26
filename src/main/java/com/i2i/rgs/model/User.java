@@ -1,6 +1,12 @@
 package com.i2i.rgs.model;
 
+import java.util.Collection;
+import java.util.List;
+
 import jakarta.persistence.*;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 import lombok.*;
 
 @NoArgsConstructor
@@ -10,7 +16,7 @@ import lombok.*;
 @Setter
 @Entity
 @Table(name = "users")
-public class User extends BaseEntity {
+public class User extends BaseEntity implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id")
@@ -34,4 +40,19 @@ public class User extends BaseEntity {
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "project_id", nullable = false)
     private Project project;
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of();
+    }
+
+    @Override
+    public String getPassword() {
+        return this.hashedPassword;
+    }
+
+    @Override
+    public String getUsername() {
+        return this.email;
+    }
 }

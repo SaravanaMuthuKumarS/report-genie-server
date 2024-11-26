@@ -32,8 +32,8 @@ public class UserController {
      */
     @PostMapping("/register")
     public ResponseEntity<SuccessResponse> addUser(@Validated @RequestBody CreateUserDto user) {
-        userService.addUser(user);
-        return SuccessResponse.setSuccessResponseCreated("User Registration Successful", null);
+        Map<String, Object> response = userService.addUser(user);
+        return SuccessResponse.setSuccessResponseCreated("User Registration Successful", response);
     }
 
     /**
@@ -46,7 +46,7 @@ public class UserController {
      */
     @PostMapping("/login")
     public ResponseEntity<SuccessResponse> login(@RequestBody CreateUserDto user) {
-        String token = userService.authenticateUser(user);
-        return SuccessResponse.setSuccessResponseOk("User authenticated successfully", Map.of("token", token));
+        Map<String, Object> response = userService.authenticateUser(user);
+        return SuccessResponse.setSuccessResponseOk("User authenticated successfully", response);
     }
 }

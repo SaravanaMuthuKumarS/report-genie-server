@@ -1,6 +1,5 @@
 package com.i2i.rgs.dto;
 
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
@@ -35,6 +34,5 @@ public class CreateUserDto {
     @NotNull(message = "IsFinance must not be empty")
     private Boolean isFinance;
 
-    @Valid
     private CreateProjectDto project;
 }

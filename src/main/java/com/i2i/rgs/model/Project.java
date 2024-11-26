@@ -10,6 +10,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.*;
 
@@ -21,6 +22,7 @@ import lombok.*;
 @Entity
 @Table(name = "projects")
 public class Project extends BaseEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id")
@@ -29,9 +31,9 @@ public class Project extends BaseEntity {
     @Column(name = "name", nullable = false, length = 35)
     private String name;
 
-    @Column(name = "client_name", nullable = false, unique = true, length = 20)
-    private String clientName;
+    @OneToOne(mappedBy = "client_id", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private Client client;
 
-    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private Set<User> employees;
+//    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+//    private Set<User> employees;
 }

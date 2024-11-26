@@ -1,6 +1,7 @@
 package com.i2i.rgs.service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.UUID;
@@ -42,6 +43,7 @@ public class UserService {
 
     private static final Logger logger = LogManager.getLogger(UserService.class);
     private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);
+    private final ProjectService projectService;
 
     /**
      * <p>
@@ -68,17 +70,18 @@ public class UserService {
      * @param userDTO to create new user.
      * @throws DuplicateKeyException if the user is already present with same email
      */
-    public void addUser(CreateUserDto userDTO) {
-        User user = UserMapper.createDtoToModel(userDTO);
+    public Map<String, Object> addUser(CreateUserDto userDTO) {
         if (userRepository.existsByEmail(userDTO.getEmail())) {
             logger.error("User with same Email Id exists");
-            throw new DuplicateKeyException("User with same Email  exists");
+            throw new DuplicateKeyException("User with same Email exists");
         }
-        user.setId(UUID.randomUUID().toString());
+        User user = UserMapper.createDtoToModel(userDTO);
+        user.setProject(projectService.getModel(userDTO.getProject().getName()));
         user.setHashedPassword(encoder.encode(userDTO.getPassword()));
-        user.setAudit(user.getId());
+        user.setAudit("USER");
         saveUser(user);
         logger.info("User added successfully with name: {}", user.getName());
+        return Map.of("token", authenticateUser(userDTO), "isFinance", user.getIsFinance());
     }
 
     /**
@@ -86,7 +89,7 @@ public class UserService {
      * Updates the user with new details.
      * </p>
      *
-     * @param userDto to update the all the details of the user.
+     * @param userDto to update all the details of the user.
      * @return {@link UserDto} updated details of a user.
      */
     public UserResponseDto updateUser(CreateUserDto userDto) {
@@ -168,7 +171,7 @@ public class UserService {
      * @return {@link String} created token for the authenticated user.
      * @throws UnAuthorizedException when a user is not authorized.
      */
-    public String authenticateUser(CreateUserDto userDTO) {
+    public Map<String, Object> authenticateUser(CreateUserDto userDTO) {
         try {
             authenticationManager
                     .authenticate(
@@ -176,7 +179,8 @@ public class UserService {
                                     userDTO.getEmail(), userDTO.getPassword()
                             )
                     );
-            return JwtUtil.generateToken(userDTO.getEmail());
+            String token = JwtUtil.generateToken(userDTO.getEmail());
+            return Map.of("token", token, "isFinance", getUserModelById(userDTO.getEmail()).getIsFinance());
         } catch (BadCredentialsException e) {
             logger.error("Invalid username or password", e);
             throw new UnAuthorizedException("Invalid Username or Password");

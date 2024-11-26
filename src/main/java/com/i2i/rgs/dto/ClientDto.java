@@ -1,5 +1,7 @@
 package com.i2i.rgs.dto;
 
+import java.util.Set;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -11,7 +13,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProjectDto {
+public class ClientDto {
     private String name;
-    private CreateClientDto client;
+    private Set<ProjectDto> projects;
 }

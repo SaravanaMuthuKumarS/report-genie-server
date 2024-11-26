@@ -36,5 +36,5 @@ public class UserResponseDto {
     private Boolean isFinance;
 
     @Valid
-    private CreateProjectDto project;
+    private ProjectDto project;
 }

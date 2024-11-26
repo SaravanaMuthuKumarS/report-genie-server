@@ -76,8 +76,8 @@ public class JwtFilter extends OncePerRequestFilter {
             return;
         }
         String authHeader = request.getHeader("Authorization");
-        String token = null;
-        String username = null;
+        String token;
+        String username;
 
         try {
             token = validateAndExtractToken(authHeader);
@@ -85,12 +85,10 @@ public class JwtFilter extends OncePerRequestFilter {
             if (SecurityContextHolder.getContext().getAuthentication() != null) {
                 filterChain.doFilter(request, response);
             }
-            User userDetails = (User) context.getBean(MyUserDetailService.class)
+            User userDetails = (User) context.getBean(MyUserDetailsService.class)
                     .loadUserByUsername(username);
             request.setAttribute("id", userDetails.getId());
-            if (!JwtUtil.validateToken(token, userDetails)) {
-                throw new UnAuthorizedException("Invalid token");
-            }
+            JwtUtil.validateToken(token, userDetails);
             UsernamePasswordAuthenticationToken authToken =
                     new UsernamePasswordAuthenticationToken(
                             userDetails, null, userDetails.getAuthorities());
