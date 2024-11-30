@@ -13,6 +13,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CreateProjectDto {
+
+    private String id;
+
     @NotNull(message = "Project name can not be empty")
     @Pattern(regexp = "^[a-zA-Z\\s]+$", message = "Project name must contain Alphabets only")
     private String name;

@@ -1,5 +1,7 @@
 package com.i2i.rgs.mapper;
 
+import java.util.stream.Collectors;
+
 import com.i2i.rgs.dto.ClientDto;
 import com.i2i.rgs.dto.CreateClientDto;
 import com.i2i.rgs.model.Client;
@@ -20,6 +22,9 @@ public class ClientMapper {
     public static ClientDto modelToDtoWithProjects(Client client) {
         return ClientDto.builder()
                 .name(client.getName())
+                .projects(client.getProjects().stream()
+                        .map(ProjectMapper::modelToDto)
+                        .collect(Collectors.toSet()))
                 .build();
     }
 }

@@ -1,6 +1,7 @@
 package com.i2i.rgs.service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -28,11 +29,16 @@ public class ClientService {
 
     public void addClient(CreateClientDto clientToAdd) {
         Client client = ClientMapper.dtoToModel(clientToAdd);
+        client.setAudit("USER");
         saveClient(client);
     }
 
     public ClientDto getByName(String name) {
-        return ClientMapper.modelToDtoWithProjects(clientRepository.findByName(name));
+        Client client = clientRepository.findByName(name);
+        if (client == null) {
+            throw new NoSuchElementException("Client not found for name " + name);
+        }
+        return ClientMapper.modelToDtoWithProjects(client);
     }
 
     public Set<String> getAllClients() {
@@ -43,6 +49,10 @@ public class ClientService {
     }
 
     public Client getModel(String clientName) {
-        return clientRepository.findByName(clientName);
+        Client client = clientRepository.findByName(clientName);
+        if (client == null) {
+            throw new NoSuchElementException("Client not found for name " + clientName);
+        }
+        return client;
     }
 }

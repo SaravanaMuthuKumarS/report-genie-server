@@ -2,6 +2,7 @@ package com.i2i.rgs.model;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 import jakarta.persistence.*;
 
@@ -37,9 +38,9 @@ public class User extends BaseEntity implements UserDetails {
     @Column(name = "is_finance", nullable = false)
     private Boolean isFinance;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "project_id", nullable = false)
-    private Project project;
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(name = "user_projects", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "project_id"))
+    private Set<Project> projects;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

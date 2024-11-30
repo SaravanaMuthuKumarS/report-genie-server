@@ -1,5 +1,6 @@
 package com.i2i.rgs.service;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -19,10 +20,13 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.i2i.rgs.dto.CreateProjectDto;
 import com.i2i.rgs.dto.CreateUserDto;
+import com.i2i.rgs.dto.LoginDto;
 import com.i2i.rgs.dto.UserResponseDto;
 import com.i2i.rgs.dto.UserDto;
 import com.i2i.rgs.mapper.UserMapper;
+import com.i2i.rgs.model.Project;
 import com.i2i.rgs.model.User;
 import com.i2i.rgs.repository.UserRepository;
 import com.i2i.rgs.helper.RGSException;
@@ -31,7 +35,7 @@ import com.i2i.rgs.util.JwtUtil;
 
 /**
  * <p>
- *     Service class that handles business logic related to user.
+ * Service class that handles business logic related to user.
  * </p>
  */
 @Service
@@ -76,12 +80,11 @@ public class UserService {
             throw new DuplicateKeyException("User with same Email exists");
         }
         User user = UserMapper.createDtoToModel(userDTO);
-        user.setProject(projectService.getModel(userDTO.getProject().getName()));
         user.setHashedPassword(encoder.encode(userDTO.getPassword()));
         user.setAudit("USER");
         saveUser(user);
         logger.info("User added successfully with name: {}", user.getName());
-        return Map.of("token", authenticateUser(userDTO), "isFinance", user.getIsFinance());
+        return Map.of("token", JwtUtil.generateToken(userDTO.getEmail()), "isFinance", user.getIsFinance());
     }
 
     /**
@@ -171,20 +174,40 @@ public class UserService {
      * @return {@link String} created token for the authenticated user.
      * @throws UnAuthorizedException when a user is not authorized.
      */
-    public Map<String, Object> authenticateUser(CreateUserDto userDTO) {
+    public Map<String, Object> authenticateUser(LoginDto userDTO) {
         try {
             authenticationManager
                     .authenticate(
                             new UsernamePasswordAuthenticationToken(
-                                    userDTO.getEmail(), userDTO.getPassword()
+                                    userDTO.getUsername(), userDTO.getPassword()
                             )
                     );
-            String token = JwtUtil.generateToken(userDTO.getEmail());
-            return Map.of("token", token, "isFinance", getUserModelById(userDTO.getEmail()).getIsFinance());
+            String token = JwtUtil.generateToken(userDTO.getUsername());
+            return Map.of("token", token, "isFinance", getUserModelByEmail(userDTO.getUsername()).getIsFinance());
         } catch (BadCredentialsException e) {
             logger.error("Invalid username or password", e);
             throw new UnAuthorizedException("Invalid Username or Password");
         }
     }
-}
 
+    private User getUserModelByEmail(String email) {
+        User user = userRepository.findByEmail(email);
+        if (user == null) {
+            logger.error("User not found for the given email: {}", email);
+            throw new NoSuchElementException("User not found for the given email: " + email);
+        }
+        logger.info("Retrieved user for the given email: {}", email);
+        return user;
+    }
+
+    public void assignProjects(String email, Set<CreateProjectDto> projectDtos) {
+        User user = getUserModelByEmail(email);
+        Set<Project> projects = new HashSet<>();
+        for (CreateProjectDto proj : projectDtos) {
+            Project project = projectService.getModel(proj.getId());
+            projects.add(project);
+        }
+        user.setProjects(projects);
+        saveUser(user);
+    }
+}

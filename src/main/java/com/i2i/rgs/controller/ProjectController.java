@@ -32,14 +32,14 @@ public class ProjectController {
     }
 
     @GetMapping
-    public ResponseEntity<SuccessResponse> getProjects(@RequestBody String name) {
-        Set<String> projects = projectService.getAllProjects();
+    public ResponseEntity<SuccessResponse> getProjects() {
+        Set<CreateProjectDto> projects = projectService.getAllProjects();
         return SuccessResponse.setSuccessResponseOk("Project fetched successfully", Map.of("projects", projects));
     }
 
-    @GetMapping("/{projectName}")
-    public ResponseEntity<SuccessResponse> getProject(@PathVariable String projectName) {
-        ProjectDto project = projectService.getByName(projectName);
+    @GetMapping("/{id}")
+    public ResponseEntity<SuccessResponse> getProject(@PathVariable String id) {
+        ProjectDto project = projectService.getById(id);
         return SuccessResponse.setSuccessResponseOk("Project fetched successfully", Map.of("project", project));
     }
 }

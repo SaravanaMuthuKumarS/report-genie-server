@@ -11,8 +11,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProjectDto {
-    private String id;
-    private String name;
-    private CreateClientDto client;
+public class LoginDto {
+    private String username;
+    private String password;
 }

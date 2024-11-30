@@ -1,5 +1,7 @@
 package com.i2i.rgs.dto;
 
+import java.util.Set;
+
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
@@ -36,5 +38,5 @@ public class UserResponseDto {
     private Boolean isFinance;
 
     @Valid
-    private ProjectDto project;
+    private Set<ProjectDto> projects;
 }

@@ -20,6 +20,7 @@ public class ProjectMapper {
 
     public static ProjectDto modelToDto(Project project) {
         return ProjectDto.builder()
+                .id(project.getId())
                 .name(project.getName())
                 .client(ClientMapper.modelToDto(project.getClient()))
                 .build();

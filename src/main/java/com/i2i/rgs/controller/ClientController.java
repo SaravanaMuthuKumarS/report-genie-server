@@ -13,9 +13,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@RequestMapping("/clients")
 public class ClientController {
 
     private final ClientService clientService;
@@ -31,7 +33,7 @@ public class ClientController {
     }
 
     @GetMapping
-    public ResponseEntity<SuccessResponse> getClients(@RequestBody String name) {
+    public ResponseEntity<SuccessResponse> getClients() {
         Set<String> clients = clientService.getAllClients();
         return SuccessResponse.setSuccessResponseOk("Client fetched successfully", Map.of("clients", clients));
     }

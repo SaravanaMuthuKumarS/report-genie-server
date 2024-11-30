@@ -11,8 +11,11 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProjectDto {
-    private String id;
-    private String name;
-    private CreateClientDto client;
+public class TimesheetRequestDto {
+    private String start;
+    private String end;
+    private int year;
+    private String client;
+    private String project;
+
 }
