@@ -12,6 +12,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ProjectDto {
+
     private String name;
     private CreateClientDto client;
 }

@@ -70,8 +70,8 @@ public class JwtFilter extends OncePerRequestFilter {
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws IOException,
             ServletException {
-        if (request.getRequestURI().contains("/v1/users/login") || request.getRequestURI()
-                .contains("/v1/users/register")) {
+        if (request.getRequestURI().contains("/v1/auth/login") || request.getRequestURI()
+                .contains("/v1/auth/signup")) {
             filterChain.doFilter(request, response);
             return;
         }

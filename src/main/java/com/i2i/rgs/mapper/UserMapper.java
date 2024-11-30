@@ -8,9 +8,9 @@ public class UserMapper {
 
     public static User createDtoToModel(CreateUserDto user) {
         return User.builder()
-                .eid(user.getEid())
+              //  .eid(user.getEid())
                 .email(user.getEmail())
-                .name(user.getName())
+              //  .name(user.getName())
                 .isFinance(user.getIsFinance())
                 .build();
     }
@@ -21,7 +21,7 @@ public class UserMapper {
                 .email(user.getEmail())
                 .name(user.getName())
                 .isFinance(user.getIsFinance())
-                .project(ProjectMapper.modelToDto(user.getProject()))
+               // .project(ProjectMapper.modelToDto(user.getProject()))
                 .build();
     }
 }

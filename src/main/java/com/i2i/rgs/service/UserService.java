@@ -1,12 +1,10 @@
 package com.i2i.rgs.service;
 
-import java.util.List;
-import java.util.Map;
-import java.util.NoSuchElementException;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
+import com.i2i.rgs.dto.*;
+import com.i2i.rgs.model.Project;
 import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -19,9 +17,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.i2i.rgs.dto.CreateUserDto;
-import com.i2i.rgs.dto.UserResponseDto;
-import com.i2i.rgs.dto.UserDto;
 import com.i2i.rgs.mapper.UserMapper;
 import com.i2i.rgs.model.User;
 import com.i2i.rgs.repository.UserRepository;
@@ -31,7 +26,7 @@ import com.i2i.rgs.util.JwtUtil;
 
 /**
  * <p>
- *     Service class that handles business logic related to user.
+ * Service class that handles business logic related to user.
  * </p>
  */
 @Service
@@ -76,7 +71,16 @@ public class UserService {
             throw new DuplicateKeyException("User with same Email exists");
         }
         User user = UserMapper.createDtoToModel(userDTO);
-        user.setProject(projectService.getModel(userDTO.getProject().getName()));
+        Set<ProjectIdDto> projectDTOs = userDTO.getProjects();
+        if(null!=projectDTOs) {
+
+            Set<Project> projects = new HashSet<>();
+            for (ProjectIdDto projectDTO : projectDTOs) {
+                Project project = projectService.getModel(projectDTO.getProjectId());
+                projects.add(project);
+            }
+            user.setProjects(projects);
+        }
         user.setHashedPassword(encoder.encode(userDTO.getPassword()));
         user.setAudit("USER");
         saveUser(user);

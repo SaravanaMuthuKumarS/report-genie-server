@@ -3,6 +3,7 @@ package com.i2i.rgs.controller;
 import java.util.Map;
 
 import com.i2i.rgs.dto.CreateUserDto;
+import com.i2i.rgs.dto.LoginDto;
 import com.i2i.rgs.helper.SuccessResponse;
 import com.i2i.rgs.service.UserService;
 
@@ -16,8 +17,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/users")
-public class UserController {
+@RequestMapping("/auth")
+public class AuthController {
 
     @Autowired
     private UserService userService;
@@ -30,7 +31,7 @@ public class UserController {
      * @param user The user details to be added.
      * @return {@link SuccessResponse} with {@link HttpStatus} CREATED
      */
-    @PostMapping("/register")
+    @PostMapping("/signup")
     public ResponseEntity<SuccessResponse> addUser(@Validated @RequestBody CreateUserDto user) {
         Map<String, Object> response = userService.addUser(user);
         return SuccessResponse.setSuccessResponseCreated("User Registration Successful", response);

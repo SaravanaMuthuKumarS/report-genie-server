@@ -32,6 +32,6 @@ public class Client extends BaseEntity{
 
     private String name;
 
-//    @OneToMany(mappedBy = "client_id", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-//    private Set<Project> projects;
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private Set<Project> projects;
 }

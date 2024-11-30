@@ -9,6 +9,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+import java.util.Set;
+
 @Builder
 @Data
 @NoArgsConstructor
@@ -17,11 +20,11 @@ public class CreateUserDto {
 
     @NotNull(message = "Employee name can not be empty")
     @Pattern(regexp = "^[a-zA-Z\\s]+$", message = "Employee name must contain Alphabets only")
-    private String name;
+    private String fullName;
 
-    @NotNull(message = "Employee Id can not be empty")
-    @Pattern(regexp = "^[a-zA-Z0-9\\s]+$", message = "Employee Id must contain Alphabets and numbers only")
-    private String eid;
+//    @NotNull(message = "Employee Id can not be empty")
+//    @Pattern(regexp = "^[a-zA-Z0-9\\s]+$", message = "Employee Id must contain Alphabets and numbers only")
+//    private String eid;
 
     @NotNull(message = "Email must not be empty")
     @Email(message = "Email should be in valid format")
@@ -34,5 +37,6 @@ public class CreateUserDto {
     @NotNull(message = "IsFinance must not be empty")
     private Boolean isFinance;
 
-    private CreateProjectDto project;
+    private Set<ProjectIdDto> projects;
+
 }

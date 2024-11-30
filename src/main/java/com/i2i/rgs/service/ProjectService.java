@@ -1,6 +1,7 @@
 package com.i2i.rgs.service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -26,8 +27,9 @@ public class ProjectService {
         projectRepository.save(project);
     }
 
-    public Project getModel( String name) {
-        return projectRepository.findByName(name);
+    public Project getModel(String id) {
+        //return projectRepository.findByName(name);
+        return projectRepository.findById(id).get();
     }
 
     public ProjectDto getByName(String name) {
