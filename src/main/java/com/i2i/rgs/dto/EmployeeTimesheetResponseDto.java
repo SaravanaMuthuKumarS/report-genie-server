@@ -12,11 +12,12 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class EmployeeTimesheetResponseDto {
-    private String employeeName;
+    private String id;
+    private String name;
     private String client;
     private String project;
-    private int billableHours;
-    private int nonBillableHours;
-    private int leaveCount;
+    private int billable;
+    private int nonBillable;
+    private int leaves;
     private int totalHours;
 }

@@ -1,7 +1,6 @@
 package com.i2i.rgs.service;
 
 import com.i2i.rgs.dto.EmployeeTimesheetResponseDto;
-import com.i2i.rgs.dto.TimesheetRequestDto;
 import com.i2i.rgs.model.Client;
 import com.i2i.rgs.model.Project;
 import com.i2i.rgs.model.TimeSheet;
@@ -22,6 +21,7 @@ public class TimesheetService {
     private final TimesheetRepository timesheetRepository;
     private final ClientService clientService;
     private final ProjectService projectService;
+    static int id = 0;
 
     public void addTimesheet(int day) {
         TimeSheet timeSheet = TimeSheet.builder()
@@ -37,20 +37,20 @@ public class TimesheetService {
     }
 
     public List<EmployeeTimesheetResponseDto> getTimesheet(
-            TimesheetRequestDto request) {
+            String startMonth, String endMonth, int year, String clientName, String projectName) {
 
-        LocalDate start = LocalDate.of(request.getYear(), Month.valueOf(request.getStart().toUpperCase()), 1);
-        LocalDate end = LocalDate.of(request.getYear(), Month.valueOf(request.getEnd().toUpperCase()), 1).plusMonths(1).minusDays(1);
-        Client client = clientService.getModel(request.getClient());
+        LocalDate start = LocalDate.of(year, Month.valueOf(startMonth.toUpperCase()), 1);
+        LocalDate end = LocalDate.of(year, Month.valueOf(endMonth.toUpperCase()), 1).plusMonths(1).minusDays(1);
+        Client client = clientService.getModel(clientName);
         if (client == null) {
             throw new IllegalArgumentException("Client not found");
         }
-        Project project = projectService.getByName(request.getProject());
+        Project project = projectService.getByName(projectName);
         if (project == null) {
             throw new IllegalArgumentException("Project not found");
         }
         List<TimeSheet> timesheets = timesheetRepository.findByDateBetweenAndClientAndProject(start, end, client, project);
-
+        id = 0;
         return timesheets.stream()
                 .collect(Collectors.groupingBy(TimeSheet::getEmployeeName))
                 .entrySet()
@@ -69,12 +69,13 @@ public class TimesheetService {
                         totalLeave += timeSheet.getIsLeave() ? 1 : 0;
                     }
                     return EmployeeTimesheetResponseDto.builder()
-                            .employeeName(empName)
-                            .billableHours(totalBillable)
-                            .nonBillableHours(totalNonBillable)
-                            .leaveCount(totalLeave)
-                            .client(request.getClient())
-                            .project(request.getProject())
+                            .id(++id + "")
+                            .name(empName)
+                            .billable(totalBillable)
+                            .nonBillable(totalNonBillable)
+                            .leaves(totalLeave)
+                            .client(clientName)
+                            .project(projectName)
                             .totalHours(totalHours)
                             .build();
                 })
