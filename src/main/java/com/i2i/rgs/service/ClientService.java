@@ -38,13 +38,13 @@ public class ClientService {
         if (client == null) {
             throw new NoSuchElementException("Client not found for name " + name);
         }
-        return ClientMapper.modelToDtoWithProjects(client);
+        return ClientMapper.modelToResponseDto(client);
     }
 
-    public Set<String> getAllClients() {
+    public Set<ClientDto> getAllClients() {
         List<Client> clients = clientRepository.findAllByIsDeletedFalse();
         return clients.stream()
-                .map(Client::getName)
+                .map(ClientMapper::modelToResponseDto)
                 .collect(Collectors.toSet());
     }
 

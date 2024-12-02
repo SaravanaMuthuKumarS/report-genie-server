@@ -19,15 +19,11 @@ public class CreateUserDto {
 
     @NotNull(message = "Employee name can not be empty")
     @Pattern(regexp = "^[a-zA-Z\\s]+$", message = "Employee name must contain Alphabets only")
-    private String name;
-
-    @NotNull(message = "Employee Id can not be empty")
-    @Pattern(regexp = "^[a-zA-Z0-9\\s]+$", message = "Employee Id must contain Alphabets and numbers only")
-    private String eid;
+    private String fullName;
 
     @NotNull(message = "Email must not be empty")
     @Email(message = "Email should be in valid format")
-    private String email;
+    private String mailId;
 
     @NotNull(message = "Password must not be empty")
     @Pattern(regexp = "^[0-9a-zA-Z\\s]+$", message = "Password must contain Alphabets and numbers only")

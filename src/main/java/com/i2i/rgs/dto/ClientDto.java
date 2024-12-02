@@ -14,6 +14,6 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ClientDto {
+    private String id;
     private String name;
-    private Set<ProjectDto> projects;
 }

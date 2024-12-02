@@ -41,10 +41,10 @@ public class ProjectService {
         return ProjectMapper.modelToDto(project);
     }
 
-    public Set<CreateProjectDto> getAllProjects() {
+    public Set<ProjectDto> getAllProjects() {
         List<Project> projects = projectRepository.findAllByIsDeletedFalse();
         return projects.stream()
-                .map(ProjectMapper::modelToCreateDto)
+                .map(ProjectMapper::modelToDto)
                 .collect(Collectors.toSet());
     }
 

@@ -34,7 +34,7 @@ public class ClientController {
 
     @GetMapping
     public ResponseEntity<SuccessResponse> getClients() {
-        Set<String> clients = clientService.getAllClients();
+        Set<ClientDto> clients = clientService.getAllClients();
         return SuccessResponse.setSuccessResponseOk("Client fetched successfully", Map.of("clients", clients));
     }
 

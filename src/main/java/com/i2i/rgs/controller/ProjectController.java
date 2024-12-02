@@ -33,7 +33,7 @@ public class ProjectController {
 
     @GetMapping
     public ResponseEntity<SuccessResponse> getProjects() {
-        Set<CreateProjectDto> projects = projectService.getAllProjects();
+        Set<ProjectDto> projects = projectService.getAllProjects();
         return SuccessResponse.setSuccessResponseOk("Project fetched successfully", Map.of("projects", projects));
     }
 

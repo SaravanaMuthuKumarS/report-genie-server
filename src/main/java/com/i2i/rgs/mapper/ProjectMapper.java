@@ -5,12 +5,6 @@ import com.i2i.rgs.dto.ProjectDto;
 import com.i2i.rgs.model.Project;
 
 public class ProjectMapper {
-    public static CreateProjectDto modelToCreateDto(Project project) {
-        return CreateProjectDto.builder()
-                .name(project.getName())
-                .clientName(project.getClient().getName())
-                .build();
-    }
 
     public static Project dtoToModel(CreateProjectDto projectDto) {
         return Project.builder()
@@ -22,7 +16,6 @@ public class ProjectMapper {
         return ProjectDto.builder()
                 .id(project.getId())
                 .name(project.getName())
-                .client(ClientMapper.modelToDto(project.getClient()))
                 .build();
     }
 }
