@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestAttribute;
@@ -25,7 +26,6 @@ public class AuthController {
 
     @Autowired
     private UserService userService;
-
     /**
      * <p>
      * Adds a new user to the database.
@@ -50,13 +50,14 @@ public class AuthController {
      */
     @PostMapping("/login")
     public ResponseEntity<SuccessResponse> login(@RequestBody LoginDto user) {
+        System.out.println("-------------User: " + user);
         Map<String, Object> response = userService.authenticateUser(user);
         return SuccessResponse.setSuccessResponseOk("User authenticated successfully", response);
     }
 
     @PatchMapping("/assign-projects")
     public ResponseEntity<SuccessResponse> assignProjects(@RequestBody CreateUserDto user) {
-        userService.assignProjects(user.getEmail(), user.getProjects());
+        userService.assignProjects(user.getFullName(), user.getProjects());
         return SuccessResponse.setSuccessResponseOk("Projects assigned successfully", null);
     }
 }

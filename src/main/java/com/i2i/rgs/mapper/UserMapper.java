@@ -10,9 +10,8 @@ public class UserMapper {
 
     public static User createDtoToModel(CreateUserDto user) {
         return User.builder()
-                .eid(user.getEid())
-                .email(user.getEmail())
-                .name(user.getName())
+                .email(user.getMailId())
+                .name(user.getFullName())
                 .isFinance(user.getIsFinance())
                 .build();
     }

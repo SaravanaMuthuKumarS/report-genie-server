@@ -72,7 +72,7 @@ public class JwtFilter extends OncePerRequestFilter {
             ServletException {
         if (request.getRequestURI().contains("/v1/auth")) {
             filterChain.doFilter(request, response);
-            return;
+//            return;
         }
         String authHeader = request.getHeader("Authorization");
         String token;

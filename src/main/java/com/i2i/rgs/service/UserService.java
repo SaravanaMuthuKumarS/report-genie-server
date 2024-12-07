@@ -75,7 +75,7 @@ public class UserService {
      * @throws DuplicateKeyException if the user is already present with same email
      */
     public Map<String, Object> addUser(CreateUserDto userDTO) {
-        if (userRepository.existsByEmail(userDTO.getEmail())) {
+        if (userRepository.existsByEmail(userDTO.getMailId())) {
             logger.error("User with same Email Id exists");
             throw new DuplicateKeyException("User with same Email exists");
         }
@@ -84,7 +84,7 @@ public class UserService {
         user.setAudit("USER");
         saveUser(user);
         logger.info("User added successfully with name: {}", user.getName());
-        return Map.of("token", JwtUtil.generateToken(userDTO.getEmail()), "isFinance", user.getIsFinance());
+        return Map.of("token", JwtUtil.generateToken(userDTO.getMailId()), "isFinance", user.getIsFinance());
     }
 
     /**
