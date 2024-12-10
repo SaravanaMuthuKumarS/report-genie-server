@@ -1,5 +1,6 @@
 package com.i2i.rgs.service;
 
+import java.io.ByteArrayOutputStream;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;
@@ -12,6 +13,7 @@ import com.i2i.rgs.mapper.ConsolidatedReportMapper;
 import com.i2i.rgs.model.ConsolidatedReport;
 import com.i2i.rgs.repository.ConsolidatedReportRepository;
 
+import com.i2i.rgs.util.CsvUtility;
 import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 
@@ -20,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 public class ConsolidatedReportService {
     private final ConsolidatedReportRepository consolidatedReportRepository;
     private final TimesheetService timesheetService;
+    private final UserService userService;
 
     public Set<ConsolidatedReportDto> getAllConsolidatedReports() {
         Set<ConsolidatedReport> consolidatedReports = consolidatedReportRepository.findAllByIsApprovedFalse();
@@ -37,7 +40,7 @@ public class ConsolidatedReportService {
         }
     }
 
-    public void approveConsolidatedReport(String id) {
+    public byte[] approveConsolidatedReport(String id) {
         ConsolidatedReport consolidatedReport;
         try {
             consolidatedReport = consolidatedReportRepository.findById(id).orElseThrow();
@@ -46,10 +49,19 @@ public class ConsolidatedReportService {
         }
         consolidatedReport.setIsApproved(true);
         consolidatedReportRepository.save(consolidatedReport);
+        return exportReportToCsv(id);
+
     }
 
     public void createConsolidatedReport(TimesheetRequestDto timesheetRequestDto) {
         ConsolidatedReport consolidatedReport = ConsolidatedReportMapper.dtoToModel(timesheetRequestDto);
         consolidatedReportRepository.save(consolidatedReport);
+    }
+
+    public byte[] exportReportToCsv(String id) {
+        List<EmployeeTimesheetResponseDto> timesheetReport = getById(id);
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        CsvUtility.writeReportToCsv(timesheetReport, outputStream);
+        return outputStream.toByteArray();
     }
 }

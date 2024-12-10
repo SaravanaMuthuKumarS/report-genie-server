@@ -1,13 +1,17 @@
 package com.i2i.rgs.service;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
+import com.i2i.rgs.dto.*;
+import com.i2i.rgs.util.CsvUtility;
 import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -20,11 +24,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.i2i.rgs.dto.CreateProjectDto;
-import com.i2i.rgs.dto.CreateUserDto;
-import com.i2i.rgs.dto.LoginDto;
-import com.i2i.rgs.dto.UserResponseDto;
-import com.i2i.rgs.dto.UserDto;
 import com.i2i.rgs.mapper.UserMapper;
 import com.i2i.rgs.model.Project;
 import com.i2i.rgs.model.User;
@@ -32,6 +31,7 @@ import com.i2i.rgs.repository.UserRepository;
 import com.i2i.rgs.helper.RGSException;
 import com.i2i.rgs.helper.UnAuthorizedException;
 import com.i2i.rgs.util.JwtUtil;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * <p>
@@ -75,7 +75,7 @@ public class UserService {
      * @throws DuplicateKeyException if the user is already present with same email
      */
     public Map<String, Object> addUser(CreateUserDto userDTO) {
-        if (userRepository.existsByEmail(userDTO.getMailId())) {
+        if (userRepository.existsByEmail(userDTO.getEmail())) {
             logger.error("User with same Email Id exists");
             throw new DuplicateKeyException("User with same Email exists");
         }
@@ -84,7 +84,7 @@ public class UserService {
         user.setAudit("USER");
         saveUser(user);
         logger.info("User added successfully with name: {}", user.getName());
-        return Map.of("token", JwtUtil.generateToken(userDTO.getMailId()), "isFinance", user.getIsFinance());
+        return Map.of("token", JwtUtil.generateToken(userDTO.getEmail()), "isFinance", user.getIsFinance());
     }
 
     /**
@@ -209,5 +209,19 @@ public class UserService {
         }
         user.setProjects(projects);
         saveUser(user);
+    }
+
+    public void saveUsersFromCsv(MultipartFile file) throws IOException {
+        InputStream is = file.getInputStream();
+        List<User> users = CsvUtility.csvToUserList(is);
+        userRepository.saveAll(users);
+    }
+
+    public byte[] exportUsersToCsv() throws IOException {
+        List<User> users = userRepository.findAll(); // Fetch all users from the database
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+
+        CsvUtility.writeUsersToCsv(users, outputStream);
+        return outputStream.toByteArray();
     }
 }

@@ -23,7 +23,7 @@ public class CreateUserDto {
 
     @NotNull(message = "Email must not be empty")
     @Email(message = "Email should be in valid format")
-    private String mailId;
+    private String email;
 
     @NotNull(message = "Password must not be empty")
     @Pattern(regexp = "^[0-9a-zA-Z\\s]+$", message = "Password must contain Alphabets and numbers only")

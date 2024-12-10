@@ -44,7 +44,7 @@ public class ConsolidatedReportController {
 
     @PatchMapping("/approve/{id}")
     public ResponseEntity<SuccessResponse> approveConsolidatedReport(@PathVariable String id) {
-        consolidatedReportService.approveConsolidatedReport(id);
-        return SuccessResponse.setSuccessResponseOk("Consolidated Report approved successfully", null);
+        byte[] reports = consolidatedReportService.approveConsolidatedReport(id);
+        return SuccessResponse.setSuccessResponseOk("Consolidated Report approved successfully", reports);
     }
 }
