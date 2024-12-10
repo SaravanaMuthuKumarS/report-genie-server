@@ -12,10 +12,10 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class TimesheetRequestDto {
-    private String start;
-    private String end;
-    private int year;
-    private String client;
-    private String project;
+    private String selectedFromMonth;
+    private String selectedToMonth;
+    private int selectedYear;
+    private String selectedClient;
+    private String selectedProject;
 
 }

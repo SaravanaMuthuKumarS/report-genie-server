@@ -2,6 +2,7 @@ package com.i2i.rgs.service;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -48,11 +49,11 @@ public class ProjectService {
                 .collect(Collectors.toSet());
     }
 
-    public Project getByName(String name) {
-        Project project = projectRepository.findByName(name);
-        if (project == null) {
-            throw new NoSuchElementException("Project not found for name " + name);
+    public Project getProjectById(String id) {
+        Optional<Project> project = projectRepository.findById(id);
+        if (project.isPresent()) {
+            return project.get();
         }
-        return project;
+        throw new NoSuchElementException("Project not found for id " + id);
     }
 }

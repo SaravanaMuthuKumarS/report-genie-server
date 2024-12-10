@@ -14,11 +14,11 @@ public class ConsolidatedReportMapper {
 
     public static ConsolidatedReport dtoToModel(TimesheetRequestDto timesheetRequestDto) {
         return ConsolidatedReport.builder()
-                .startMonth(timesheetRequestDto.getStart())
-                .endMonth(timesheetRequestDto.getEnd())
-                .year(timesheetRequestDto.getYear())
-                .client(timesheetRequestDto.getClient())
-                .project(timesheetRequestDto.getProject())
+                .startMonth(timesheetRequestDto.getSelectedFromMonth())
+                .endMonth(timesheetRequestDto.getSelectedToMonth())
+                .year(timesheetRequestDto.getSelectedYear())
+                .client(timesheetRequestDto.getSelectedClient())
+                .project(timesheetRequestDto.getSelectedProject())
                 .isApproved(false)
                 .build();
     }

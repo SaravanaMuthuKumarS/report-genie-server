@@ -2,6 +2,7 @@ package com.i2i.rgs.service;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -48,11 +49,11 @@ public class ClientService {
                 .collect(Collectors.toSet());
     }
 
-    public Client getModel(String clientName) {
-        Client client = clientRepository.findByName(clientName);
-        if (client == null) {
-            throw new NoSuchElementException("Client not found for name " + clientName);
+    public Client getModel(String clientId) {
+        Optional<Client> client = clientRepository.findById(clientId);
+        if (client.isPresent()) {
+            return client.get();
         }
-        return client;
+        throw new NoSuchElementException("Client not found for id " + clientId);
     }
 }

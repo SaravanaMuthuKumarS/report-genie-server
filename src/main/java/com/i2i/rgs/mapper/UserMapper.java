@@ -18,7 +18,6 @@ public class UserMapper {
 
     public static UserResponseDto modelToResponseDto(User user) {
         return UserResponseDto.builder()
-                .eid(user.getEid())
                 .email(user.getEmail())
                 .name(user.getName())
                 .isFinance(user.getIsFinance())

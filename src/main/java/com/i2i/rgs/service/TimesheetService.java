@@ -29,7 +29,7 @@ public class TimesheetService {
                 .nonBillableHours(2)
                 .isLeave(false)
                 .client(clientService.getModel("Opos"))
-                .project(projectService.getByName("HL7"))
+                .project(projectService.getProjectById("HL7"))
                 .employeeName("Jane")
                 .date(LocalDate.of(2024, 11, day))
                 .build();
@@ -37,18 +37,12 @@ public class TimesheetService {
     }
 
     public List<EmployeeTimesheetResponseDto> getTimesheet(
-            String startMonth, String endMonth, int year, String clientName, String projectName) {
+            String startMonth, String endMonth, int year, String clientId, String projectId) {
 
         LocalDate start = LocalDate.of(year, Month.valueOf(startMonth.toUpperCase()), 1);
         LocalDate end = LocalDate.of(year, Month.valueOf(endMonth.toUpperCase()), 1).plusMonths(1).minusDays(1);
-        Client client = clientService.getModel(clientName);
-        if (client == null) {
-            throw new IllegalArgumentException("Client not found");
-        }
-        Project project = projectService.getByName(projectName);
-        if (project == null) {
-            throw new IllegalArgumentException("Project not found");
-        }
+        Client client = clientService.getModel(clientId);
+        Project project = projectService.getProjectById(projectId);
         List<TimeSheet> timesheets = timesheetRepository.findByDateBetweenAndClientAndProject(start, end, client, project);
         id = 0;
         return timesheets.stream()
@@ -74,8 +68,8 @@ public class TimesheetService {
                             .billable(totalBillable)
                             .nonBillable(totalNonBillable)
                             .leaves(totalLeave)
-                            .client(clientName)
-                            .project(projectName)
+                            .client(clientId)
+                            .project(projectId)
                             .totalHours(totalHours)
                             .build();
                 })

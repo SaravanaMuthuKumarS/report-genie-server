@@ -27,8 +27,8 @@ public class TimesheetController {
 
     @PostMapping
     public ResponseEntity<SuccessResponse> getTimesheets(@RequestBody TimesheetRequestDto request) {
-        List<EmployeeTimesheetResponseDto> timesheets = timesheetService.getTimesheet(request.getStart(), request.getEnd(),
-                request.getYear(), request.getClient(), request.getProject());
+        List<EmployeeTimesheetResponseDto> timesheets = timesheetService.getTimesheet(request.getSelectedFromMonth(), request.getSelectedToMonth(),
+                request.getSelectedYear(), request.getSelectedClient(), request.getSelectedProject());
         return SuccessResponse.setSuccessResponseOk("Timesheets fetched successfully",
                 Map.of("timesheets", timesheets));
     }
